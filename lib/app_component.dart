@@ -4,8 +4,7 @@
 
 import 'package:angular/angular.dart';
 import 'package:angular_components/angular_components.dart';
-
-import 'src/todo_list/todo_list_component.dart';
+import 'package:english_words/english_words.dart';
 
 // AngularDart info: https://webdev.dartlang.org/angular
 // Components info: https://webdev.dartlang.org/components
@@ -14,9 +13,39 @@ import 'src/todo_list/todo_list_component.dart';
   selector: 'my-app',
   styleUrls: const ['app_component.css'],
   templateUrl: 'app_component.html',
-  directives: const [materialDirectives, TodoListComponent],
+  directives: const [CORE_DIRECTIVES, materialDirectives],
   providers: const [materialProviders],
 )
-class AppComponent {
-  // Nothing here yet. All logic is in TodoListComponent.
+class AppComponent implements OnInit {
+
+  var names = <WordPair>[];
+  final savedNames = new Set<WordPair>();
+
+  @override
+  void ngOnInit() {
+    generateNames();
+  }
+
+  void generateNames() {
+    names = generateWordPairs().take(5).toList();
+  }
+
+  void addToSaved(WordPair name) {
+    savedNames.add(name);
+    print('added $name: $savedNames');
+  }
+
+  void removeFromSaved(WordPair name) {
+    savedNames.remove(name);
+    print('removed $name: $savedNames');
+  }
+
+  void toggleSavedState(WordPair name) {
+    if (savedNames.contains(name)) {
+      removeFromSaved(name);
+      return;
+    }
+    addToSaved(name);
+  }
+
 }
